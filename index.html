@@ -1,0 +1,597 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>신축 교사동 소요공간 정의서</title>
+<style>
+  :root{
+    --paper:#F4F6F9;
+    --surface:#FFFFFF;
+    --ink:#16243B;
+    --ink-soft:#54607A;
+    --ink-faint:#8A93A6;
+    --line:#DCE2EB;
+    --line-strong:#B9C2D0;
+    --accent:#1E5FBF;
+    --accent-soft:#E9F1FD;
+    --grid:#D6E1F2;
+    --essential:#B91C1C;
+    --essential-bg:#FCEDED;
+    --recommended:#B45309;
+    --recommended-bg:#FBF1E4;
+    --optional:#5B677B;
+    --optional-bg:#EEF1F5;
+    --total:#0F766E;
+    --radius:6px;
+    --mono:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono","D2Coding",monospace;
+    --sans:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:var(--sans);
+    color:var(--ink);
+    background:
+      linear-gradient(var(--grid) 1px,transparent 1px) 0 0/100% 28px,
+      linear-gradient(90deg,var(--grid) 1px,transparent 1px) 0 0/28px 100%,
+      var(--paper);
+    background-attachment:fixed;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+    padding:24px 16px 80px;
+  }
+  .wrap{max-width:1180px;margin:0 auto}
+
+  /* ── Title block (도면 표제란 컨셉) ── */
+  .titleblock{
+    background:var(--surface);
+    border:2px solid var(--ink);
+    border-radius:var(--radius);
+    overflow:hidden;
+    box-shadow:0 1px 0 var(--line-strong);
+  }
+  .tb-top{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+    padding:18px 22px;border-bottom:1.5px solid var(--ink);flex-wrap:wrap;
+  }
+  .tb-eyebrow{
+    font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;margin:0 0 6px;
+  }
+  .tb-title{font-size:26px;font-weight:800;letter-spacing:-.01em;margin:0;line-height:1.15}
+  .tb-sub{font-size:13px;color:var(--ink-soft);margin:7px 0 0;max-width:560px}
+  .tb-stamp{
+    font-family:var(--mono);font-size:11px;color:var(--ink-faint);text-align:right;
+    border:1px dashed var(--line-strong);border-radius:var(--radius);padding:8px 12px;line-height:1.7;
+    white-space:nowrap;
+  }
+  .tb-stamp b{color:var(--ink);font-weight:700}
+  .tb-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);
+  }
+  .tb-cell{
+    border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+    padding:9px 14px;min-width:0;
+  }
+  .tb-grid .tb-cell:nth-child(4n){border-right:none}
+  .tb-grid .tb-cell:nth-last-child(-n+4){border-bottom:none}
+  .tb-cell label{
+    display:block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-faint);margin-bottom:3px;
+  }
+  .tb-cell input{
+    width:100%;border:none;background:transparent;font-family:var(--sans);
+    font-size:14px;font-weight:600;color:var(--ink);padding:1px 0;
+  }
+  .tb-cell input:focus{outline:none;color:var(--accent)}
+
+  /* ── Summary panel (signature) ── */
+  .summary{
+    display:grid;grid-template-columns:1.1fr 1.1fr 1fr 1.4fr;gap:1px;
+    background:var(--line);border:1.5px solid var(--ink);border-top:none;
+    border-radius:0 0 var(--radius) var(--radius);overflow:hidden;
+  }
+  .sum-cell{background:var(--surface);padding:14px 18px}
+  .sum-cell .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
+  .sum-cell .v{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--ink);margin-top:3px;line-height:1}
+  .sum-cell .v small{font-size:13px;font-weight:600;color:var(--ink-soft)}
+  .sum-cell.accent .v{color:var(--total)}
+  .eff-row{display:flex;align-items:center;gap:8px;margin-top:6px}
+  .eff-row input[type=range]{flex:1;accent-color:var(--accent);height:3px}
+  .eff-row .effv{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);min-width:42px;text-align:right}
+  .sum-note{font-size:11px;color:var(--ink-faint);margin-top:4px}
+
+  /* ── Toolbar ── */
+  .toolbar{
+    display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+    margin:18px 0 14px;
+  }
+  .toolbar .spacer{flex:1}
+  button{
+    font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;
+    border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);
+    padding:8px 13px;border-radius:var(--radius);transition:.12s;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  button:hover{border-color:var(--accent);color:var(--accent)}
+  button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  button.primary:hover{background:#1a52a6;color:#fff}
+  button.ghost{border-color:transparent;background:transparent;color:var(--ink-soft);padding:8px 10px}
+  button.ghost:hover{color:var(--essential);border-color:transparent}
+  .legend{display:flex;gap:14px;align-items:center;font-size:12px;color:var(--ink-soft);flex-wrap:wrap}
+  .tag{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px}
+  .tag.e{color:var(--essential);background:var(--essential-bg)}
+  .tag.r{color:var(--recommended);background:var(--recommended-bg)}
+  .tag.o{color:var(--optional);background:var(--optional-bg)}
+
+  /* ── Category + table ── */
+  .cat{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    margin-bottom:16px;overflow:hidden;
+  }
+  .cat-head{
+    display:flex;align-items:center;gap:10px;padding:11px 14px;
+    border-bottom:1px solid var(--line);background:#FAFBFD;
+  }
+  .cat-no{font-family:var(--mono);font-size:12px;font-weight:700;color:#fff;background:var(--ink);
+    width:24px;height:24px;border-radius:5px;display:grid;place-items:center;flex:none}
+  .cat-name{
+    font-size:15px;font-weight:700;border:none;background:transparent;color:var(--ink);
+    flex:1;min-width:0;padding:2px 4px;border-radius:4px;
+  }
+  .cat-name:focus{outline:none;background:var(--accent-soft)}
+  .cat-sub{font-family:var(--mono);font-size:12px;color:var(--ink-soft);white-space:nowrap}
+  .cat-sub b{color:var(--total);font-weight:700}
+
+  .tscroll{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;min-width:880px}
+  thead th{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--ink-faint);font-weight:600;text-align:left;padding:8px 10px;
+    border-bottom:1px solid var(--line);background:#fff;white-space:nowrap;
+  }
+  th.num,td.num{text-align:right}
+  tbody td{border-bottom:1px solid var(--line);padding:0;vertical-align:middle}
+  tbody tr:hover{background:#FBFCFE}
+  td input,td select,td textarea{
+    width:100%;border:none;background:transparent;font-family:var(--sans);font-size:13px;
+    color:var(--ink);padding:9px 10px;resize:none;
+  }
+  td input:focus,td select,td textarea:focus{outline:none}
+  td.editing input:focus,td.editing textarea:focus{background:var(--accent-soft)}
+  td input.numf,td .subt{font-family:var(--mono);text-align:right}
+  td .subt{padding:9px 10px;font-weight:700;color:var(--total);white-space:nowrap}
+  td select{font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;-webkit-appearance:none;appearance:none;text-align:center}
+  td.prio{text-align:center}
+  select.e{color:var(--essential)} select.r{color:var(--recommended)} select.o{color:var(--optional)}
+  td.op textarea{font-size:12.5px;color:var(--ink-soft);min-height:38px}
+  td.del{width:34px;text-align:center}
+  td.del button{border:none;background:transparent;color:var(--ink-faint);padding:6px;font-size:15px;line-height:1}
+  td.del button:hover{color:var(--essential)}
+  .cat-foot{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#FAFBFD;border-top:1px solid var(--line)}
+  .add-row{font-size:12.5px;color:var(--accent);border:1px dashed var(--line-strong);background:#fff}
+  .add-row:hover{border-style:solid;background:var(--accent-soft)}
+
+  /* ── Opinions ── */
+  .opinions{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-top:24px}
+  .opinions h2{font-size:16px;margin:0 0 4px;display:flex;align-items:center;gap:8px}
+  .opinions .desc{font-size:12.5px;color:var(--ink-soft);margin:0 0 16px}
+  .op-new{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start;margin-bottom:14px}
+  .op-new input{border:1px solid var(--line);border-radius:var(--radius);padding:8px 10px;font-family:var(--sans);font-size:13px;width:140px}
+  .op-new textarea{flex:1;min-width:220px;border:1px solid var(--line);border-radius:var(--radius);padding:8px 10px;font-family:var(--sans);font-size:13px;min-height:40px;resize:vertical}
+  .op-new input:focus,.op-new textarea:focus{outline:none;border-color:var(--accent)}
+  .op-list{display:flex;flex-direction:column;gap:10px}
+  .op-card{border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius);padding:11px 14px;position:relative}
+  .op-meta{font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin-bottom:4px}
+  .op-meta b{color:var(--ink);font-weight:700}
+  .op-text{font-size:13.5px;color:var(--ink);white-space:pre-wrap;line-height:1.55}
+  .op-card .x{position:absolute;top:8px;right:8px;border:none;background:transparent;color:var(--ink-faint);padding:2px 6px;font-size:14px}
+  .op-card .x:hover{color:var(--essential)}
+  .op-empty{font-size:13px;color:var(--ink-faint);font-style:italic;padding:6px 0}
+
+  .footnote{font-size:11.5px;color:var(--ink-faint);margin-top:22px;line-height:1.7;font-family:var(--mono)}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:#fff;font-size:13px;padding:10px 18px;border-radius:24px;
+    opacity:0;pointer-events:none;transition:.25s;z-index:50;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  @media (max-width:760px){
+    body{padding:14px 8px 70px}
+    .tb-grid{grid-template-columns:repeat(2,1fr)}
+    .tb-grid .tb-cell:nth-child(4n){border-right:1px solid var(--line)}
+    .tb-grid .tb-cell:nth-child(2n){border-right:none}
+    .summary{grid-template-columns:1fr 1fr}
+    .tb-stamp{text-align:left}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media print{
+    body{background:#fff;padding:0}
+    .toolbar,.add-row,.cat-foot button,td.del,.op-new,.op-card .x{display:none!important}
+    .cat,.titleblock,.opinions{break-inside:avoid;box-shadow:none}
+    table{min-width:0}
+    .tscroll{overflow:visible}
+  }
+</style>
+
+<div class="wrap">
+  <!-- 표제란 -->
+  <div class="titleblock">
+    <div class="tb-top">
+      <div>
+        <p class="tb-eyebrow">Architectural Program · 건축 기획</p>
+        <h1 class="tb-title">신축 교사동 소요공간 정의서</h1>
+        <p class="tb-sub">신축 교사동에 필요한 공간을 기능별로 정의하고, 면적·수용인원·설비 요구와 검토 의견을 함께 정리하는 작업 양식입니다. 모든 칸은 직접 수정할 수 있으며 변경 내용은 자동 저장됩니다.</p>
+      </div>
+      <div class="tb-stamp" id="stamp">
+        DOC. <b>SPACE-PROGRAM</b><br>
+        REV. <b id="revStamp">1.0</b><br>
+        <span id="dateStamp">—</span>
+      </div>
+    </div>
+    <div class="tb-grid">
+      <div class="tb-cell"><label>학교 / 시설명</label><input id="m_school" placeholder="온세종학교"></div>
+      <div class="tb-cell"><label>대상 규모</label><input id="m_scale" placeholder="예: 12학급 / 학생 300명"></div>
+      <div class="tb-cell"><label>작성 / 담당</label><input id="m_author" placeholder="작성자"></div>
+      <div class="tb-cell"><label>작성일</label><input id="m_date" type="date"></div>
+      <div class="tb-cell"><label>버전</label><input id="m_version" placeholder="1.0"></div>
+      <div class="tb-cell"><label>대지 / 위치</label><input id="m_site" placeholder="세종특별자치시 …"></div>
+      <div class="tb-cell"><label>관할</label><input id="m_authority" placeholder="세종특별자치시교육청"></div>
+      <div class="tb-cell"><label>비고</label><input id="m_note" placeholder="고교학점제 운영 반영 등"></div>
+    </div>
+    <!-- 집계 패널 -->
+    <div class="summary">
+      <div class="sum-cell"><div class="k">공간 항목 수</div><div class="v" id="s_count">0<small> 종</small></div></div>
+      <div class="sum-cell"><div class="k">총 실 수량</div><div class="v" id="s_units">0<small> 실</small></div></div>
+      <div class="sum-cell"><div class="k">전용면적 합계</div><div class="v" id="s_net">0<small> ㎡</small></div></div>
+      <div class="sum-cell accent">
+        <div class="k">추정 연면적</div><div class="v" id="s_gross">0<small> ㎡</small></div>
+        <div class="eff-row">
+          <span class="k" style="text-transform:none">유효율</span>
+          <input type="range" id="eff" min="50" max="85" step="1" value="65">
+          <span class="effv" id="effv">65%</span>
+        </div>
+        <div class="sum-note">연면적 = 전용면적 ÷ 유효율 (복도·계단·벽체·코어 포함 추정)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 툴바 -->
+  <div class="toolbar">
+    <div class="legend">
+      우선순위:
+      <span class="tag e">필수</span>
+      <span class="tag r">권장</span>
+      <span class="tag o">선택</span>
+    </div>
+    <div class="spacer"></div>
+    <button id="btnAddCat">＋ 공간 구분 추가</button>
+    <button id="btnPrint">🖨 인쇄 / PDF</button>
+    <button id="btnExport" class="primary">⧉ Markdown 복사</button>
+    <button id="btnReset" class="ghost">초기화</button>
+  </div>
+
+  <div id="cats"></div>
+
+  <!-- 종합 검토 의견 -->
+  <div class="opinions">
+    <h2>💬 종합 검토 의견</h2>
+    <p class="desc">표의 개별 칸에는 항목별 의견을, 이곳에는 전체 구성·면적 배분·우선순위에 대한 종합 의견을 누적해 기록합니다.</p>
+    <div class="op-new">
+      <input id="op_author" placeholder="작성자">
+      <textarea id="op_text" placeholder="의견을 입력하고 추가 버튼을 누르세요 (예: 온라인 수업 스튜디오는 방음 등급을 상향 검토 필요)"></textarea>
+      <button id="op_add" class="primary" style="align-self:stretch">의견 추가</button>
+    </div>
+    <div class="op-list" id="op_list"></div>
+  </div>
+
+  <div class="footnote">
+    ※ 기본 입력값은 일반적인 학교 기준의 예시이며 실제 설계 기준이 아닙니다. 학생 수·학급 수·운영 방식에 맞춰 면적과 설비를 조정하십시오.<br>
+    ※ 전용면적 합계는 각 실의 (수량 × 단위면적) 합이며, 연면적은 유효율로 환산한 추정치입니다. 정확한 면적은 건축 설계 단계에서 확정됩니다.
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const PRIO = {필수:'e', 권장:'r', 선택:'o'};
+const DEFAULT_META = {school:'온세종학교',scale:'동시 개설 최대 10강좌 · 온라인(main)+대면 실습(sub)',author:'',date:'',version:'1.0',site:'',authority:'세종특별자치시교육청',note:'온라인학교 — 온라인 송출 거점 중심'};
+const DEFAULT_EFF = 65;
+
+const DEFAULT_CATS = [
+  {name:'온라인 수업·송출 공간', spaces:[
+    ['종합 스튜디오','고품질 녹화·라이브 콘텐츠 제작',1,66,8,'다카메라, 크로마키, 조명그리드, 방음, 음향','필수','합반·특강 겸용, 송출 10석 중 1석'],
+    ['송출 부스(1인)','실시간 온라인 수업 송출',9,13,2,'카메라, 듀얼모니터, 마이크, 조명, 방음','필수','동시 개설 10강좌 대응: 종합 1 + 부스 9 = 10석'],
+    ['송출 통제실(부조정실)','전체 송출 모니터링·제어',1,20,3,'송출 스위처, 모니터월, 음향콘솔','필수','동시 송출 상태 통합 관제'],
+    ['콘텐츠 편집·제작실','녹화본 후반작업·자료 제작',2,16,2,'고사양 편집 PC, 방음','권장',''],
+  ]},
+  {name:'대면 실습 공간', spaces:[
+    ['과학 실험실','과학 대면 실습',1,90,24,'실험대, 급배수, 환기/흄후드, 안전설비','필수',''],
+    ['과학 준비실','시약·기자재 보관',1,20,0,'시약장, 환기, 잠금장치','권장',''],
+    ['컴퓨터실','정보·SW 대면 실습',1,66,24,'실습용 PC, 무선AP, 전원분전반','필수',''],
+    ['다목적 실습실(가변)','기타 대면 실습 수요 대비',1,50,20,'가변형 가구, 무선AP','선택','수요 발생 시 전용화'],
+  ]},
+  {name:'교사·강사 공간', spaces:[
+    ['교무실','교사 업무·콘텐츠 준비',1,99,30,'개인 업무석, 사물함, 회의테이블','필수',''],
+    ['교과 연구·기획실','교과군별 콘텐츠 기획',2,33,8,'회의테이블, 자료보관','권장',''],
+    ['강사 대기·준비실','시간강사 송출 전 대기·리허설',1,33,10,'사물함, 탕비, 무선AP','권장','학기별 강사 채용 규모 반영'],
+  ]},
+  {name:'행정·운영 공간', spaces:[
+    ['행정실','학교 행정·민원',1,66,12,'민원창구, 금고','필수',''],
+    ['교장실','학교장 집무·접견',1,33,4,'응접세트','필수',''],
+    ['회의실','부서·운영위원회 회의',1,50,20,'화상회의, 대형 디스플레이','권장',''],
+    ['상담실','방문 학생·학부모 대면 상담',2,20,4,'방음, 응접','권장',''],
+  ]},
+  {name:'학생지원 공간(방문 대응)', spaces:[
+    ['방문학생 자율학습실','등교형 학생 학습 거점',1,33,16,'무선AP, 콘센트, 개인부스','선택',''],
+    ['진로·심리상담실','진로지도·심리상담',1,20,6,'방음','선택',''],
+  ]},
+  {name:'공용·지원 공간', spaces:[
+    ['서버·전산실(메인)','송출·NAS·네트워크 코어',1,33,0,'항온항습, UPS, 출입통제','필수','송출 인프라 핵심'],
+    ['통신 인입실(MDF)','회선 인입·이중화',1,13,0,'회선 인입, 백업회선','권장','송출 안정성 위해 회선 이중화'],
+    ['탕비실','급탕·간이 휴게',2,13,0,'싱크, 냉장고','권장',''],
+    ['창고(기자재·교구)','촬영장비·실습교구 보관',2,16,0,'선반','권장',''],
+    ['화장실','위생 (다목적 포함)',3,25,0,'다목적화장실 포함','필수',''],
+    ['기계·전기실','설비·전기 인입',1,33,0,'수배전, 공조','필수',''],
+  ]},
+];
+
+let state = null;
+const uid = () => Math.random().toString(36).slice(2,9);
+
+function freshState(){
+  const n=new Date(), td=n.getFullYear()+'.'+String(n.getMonth()+1).padStart(2,'0')+'.'+String(n.getDate()).padStart(2,'0');
+  return {
+    meta:{...DEFAULT_META},
+    eff:DEFAULT_EFF,
+    cats:DEFAULT_CATS.map(c=>({
+      id:uid(), name:c.name,
+      spaces:c.spaces.map(s=>({id:uid(),name:s[0],purpose:s[1],qty:s[2],area:s[3],cap:s[4],equip:s[5],prio:s[6],op:s[7]}))
+    })),
+    opinions:[
+      {id:uid(),author:'기준 메모',text:'송출석 산정: 동시 개설 최대 10강좌 기준으로 종합 스튜디오 1 + 1인 송출 부스 9 = 10석. 점검·고장·증설 대비 예비 1~2석 확보를 권장합니다.',date:td},
+      {id:uid(),author:'기준 메모',text:'온라인학교는 송출 중단이 곧 수업 중단입니다. 서버·전산실 전원(UPS)과 통신 회선의 이중화를 설계 우선순위로 검토하십시오.',date:td}
+    ]
+  };
+}
+
+/* ── Storage ── */
+const Store = {
+  ok:(typeof window!=='undefined' && window.storage && typeof window.storage.get==='function'),
+  async load(){ if(!this.ok) return null; try{const r=await window.storage.get('space-program');return r?JSON.parse(r.value):null;}catch(e){return null;} },
+  async save(v){ if(!this.ok) return; try{await window.storage.set('space-program',JSON.stringify(v));}catch(e){} }
+};
+let saveT=null;
+function save(){ clearTimeout(saveT); saveT=setTimeout(()=>Store.save(state),350); }
+
+/* ── Compute ── */
+const num=v=>{const n=parseFloat(v);return isNaN(n)?0:n;};
+function catNet(c){return c.spaces.reduce((a,s)=>a+num(s.qty)*num(s.area),0);}
+function catUnits(c){return c.spaces.reduce((a,s)=>a+num(s.qty),0);}
+function fmt(n){return n.toLocaleString('ko-KR',{maximumFractionDigits:1});}
+
+function recompute(){
+  let net=0,units=0,count=0;
+  state.cats.forEach(c=>{net+=catNet(c);units+=catUnits(c);count+=c.spaces.length;});
+  const gross=state.eff>0?net/(state.eff/100):0;
+  document.getElementById('s_count').innerHTML=count+'<small> 종</small>';
+  document.getElementById('s_units').innerHTML=fmt(units)+'<small> 실</small>';
+  document.getElementById('s_net').innerHTML=fmt(net)+'<small> ㎡</small>';
+  document.getElementById('s_gross').innerHTML=fmt(gross)+'<small> ㎡</small>';
+  state.cats.forEach(c=>{
+    const el=document.getElementById('catsub-'+c.id);
+    if(el) el.innerHTML=c.spaces.length+'종 · '+fmt(catUnits(c))+'실 · <b>'+fmt(catNet(c))+' ㎡</b>';
+  });
+}
+
+/* ── Render ── */
+function renderMeta(){
+  const m=state.meta;
+  m_school.value=m.school; m_scale.value=m.scale; m_author.value=m.author;
+  m_date.value=m.date; m_version.value=m.version; m_site.value=m.site;
+  m_authority.value=m.authority; m_note.value=m.note;
+  eff.value=state.eff; effv.textContent=state.eff+'%';
+  revStamp.textContent=m.version||'1.0';
+  dateStamp.textContent=m.date||'작성일 미정';
+}
+
+function spaceRow(cid,s){
+  const pc=PRIO[s.prio]||'o';
+  const opts=Object.keys(PRIO).map(p=>`<option ${p===s.prio?'selected':''}>${p}</option>`).join('');
+  const tr=document.createElement('tr');
+  tr.dataset.sid=s.id; tr.dataset.cid=cid;
+  tr.innerHTML=`
+    <td class="editing"><input data-f="name" value="${esc(s.name)}" placeholder="공간명"></td>
+    <td class="editing"><input data-f="purpose" value="${esc(s.purpose)}" placeholder="용도·기능"></td>
+    <td class="num editing"><input class="numf" data-f="qty" inputmode="decimal" value="${esc(s.qty)}"></td>
+    <td class="num editing"><input class="numf" data-f="area" inputmode="decimal" value="${esc(s.area)}"></td>
+    <td class="num editing"><input class="numf" data-f="cap" inputmode="numeric" value="${esc(s.cap)}"></td>
+    <td class="editing"><input data-f="equip" value="${esc(s.equip)}" placeholder="필요 설비"></td>
+    <td class="prio"><select data-f="prio" class="${pc}">${opts}</select></td>
+    <td class="num"><div class="subt" data-sub>${fmt(num(s.qty)*num(s.area))}</div></td>
+    <td class="op editing"><textarea data-f="op" placeholder="의견">${esc(s.op)}</textarea></td>
+    <td class="del"><button title="삭제" data-del>✕</button></td>`;
+  return tr;
+}
+
+function renderCats(){
+  const root=document.getElementById('cats');
+  root.innerHTML='';
+  state.cats.forEach((c,i)=>{
+    const cat=document.createElement('div'); cat.className='cat'; cat.dataset.cid=c.id;
+    cat.innerHTML=`
+      <div class="cat-head">
+        <div class="cat-no">${String(i+1).padStart(2,'0')}</div>
+        <input class="cat-name" value="${esc(c.name)}" data-catname placeholder="공간 구분명">
+        <div class="cat-sub" id="catsub-${c.id}"></div>
+        <button class="ghost" data-delcat title="구분 삭제">✕</button>
+      </div>
+      <div class="tscroll">
+        <table>
+          <thead><tr>
+            <th>공간명</th><th>용도·기능</th><th class="num">수량</th>
+            <th class="num">단위면적㎡</th><th class="num">수용</th><th>필요 설비</th>
+            <th style="text-align:center">우선순위</th><th class="num">소계㎡</th><th>의견·검토</th><th></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="cat-foot">
+        <button class="add-row" data-addrow>＋ 공간 추가</button>
+      </div>`;
+    const tb=cat.querySelector('tbody');
+    c.spaces.forEach(s=>tb.appendChild(spaceRow(c.id,s)));
+    root.appendChild(cat);
+  });
+  recompute();
+}
+
+function renderOpinions(){
+  const list=document.getElementById('op_list');
+  if(!state.opinions.length){ list.innerHTML='<div class="op-empty">아직 등록된 종합 의견이 없습니다.</div>'; return; }
+  list.innerHTML='';
+  state.opinions.slice().reverse().forEach(o=>{
+    const d=document.createElement('div'); d.className='op-card';
+    d.innerHTML=`<div class="op-meta"><b>${esc(o.author||'익명')}</b> · ${esc(o.date)}</div>
+      <div class="op-text">${esc(o.text)}</div>
+      <button class="x" data-opdel="${o.id}" title="삭제">✕</button>`;
+    list.appendChild(d);
+  });
+}
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+
+/* ── Find helpers ── */
+const findCat=id=>state.cats.find(c=>c.id===id);
+const findSpace=(cid,sid)=>{const c=findCat(cid);return c&&c.spaces.find(s=>s.id===sid);};
+
+/* ── Events: meta ── */
+const metaMap={m_school:'school',m_scale:'scale',m_author:'author',m_date:'date',m_version:'version',m_site:'site',m_authority:'authority',m_note:'note'};
+Object.keys(metaMap).forEach(id=>{
+  document.getElementById(id).addEventListener('input',e=>{
+    state.meta[metaMap[id]]=e.target.value;
+    if(metaMap[id]==='version') revStamp.textContent=e.target.value||'1.0';
+    if(metaMap[id]==='date') dateStamp.textContent=e.target.value||'작성일 미정';
+    save();
+  });
+});
+eff.addEventListener('input',e=>{state.eff=num(e.target.value);effv.textContent=state.eff+'%';recompute();save();});
+
+/* ── Events: table (delegation) ── */
+document.getElementById('cats').addEventListener('input',e=>{
+  const t=e.target;
+  if(t.matches('[data-catname]')){ findCat(t.closest('.cat').dataset.cid).name=t.value; save(); return; }
+  const tr=t.closest('tr'); if(!tr) return;
+  const sp=findSpace(tr.dataset.cid,tr.dataset.sid); if(!sp) return;
+  const f=t.dataset.f; if(!f) return;
+  sp[f]=t.value;
+  if(f==='qty'||f==='area'){
+    tr.querySelector('[data-sub]').textContent=fmt(num(sp.qty)*num(sp.area));
+    recompute();
+  }
+  save();
+});
+document.getElementById('cats').addEventListener('change',e=>{
+  const t=e.target;
+  if(t.matches('select[data-f="prio"]')){
+    const tr=t.closest('tr'); const sp=findSpace(tr.dataset.cid,tr.dataset.sid);
+    sp.prio=t.value; t.className=PRIO[t.value]||'o'; save();
+  }
+});
+document.getElementById('cats').addEventListener('click',e=>{
+  const t=e.target;
+  if(t.matches('[data-del]')){
+    const tr=t.closest('tr'); const c=findCat(tr.dataset.cid);
+    c.spaces=c.spaces.filter(s=>s.id!==tr.dataset.sid);
+    renderCats(); save(); toast('항목을 삭제했습니다');
+  }
+  if(t.matches('[data-addrow]')){
+    const c=findCat(t.closest('.cat').dataset.cid);
+    c.spaces.push({id:uid(),name:'',purpose:'',qty:1,area:0,cap:0,equip:'',prio:'권장',op:''});
+    renderCats(); save();
+    const rows=t.closest('.cat').querySelectorAll('tbody tr');
+    rows[rows.length-1]?.querySelector('input')?.focus();
+  }
+  if(t.matches('[data-delcat]')){
+    if(state.cats.length<=1){toast('최소 1개 구분은 필요합니다');return;}
+    const cid=t.closest('.cat').dataset.cid;
+    if(confirm('이 공간 구분과 포함된 모든 항목을 삭제할까요?')){
+      state.cats=state.cats.filter(c=>c.id!==cid);
+      renderCats(); save(); toast('구분을 삭제했습니다');
+    }
+  }
+});
+
+/* ── Toolbar ── */
+document.getElementById('btnAddCat').addEventListener('click',()=>{
+  state.cats.push({id:uid(),name:'새 공간 구분',spaces:[{id:uid(),name:'',purpose:'',qty:1,area:0,cap:0,equip:'',prio:'권장',op:''}]});
+  renderCats(); save();
+  const cats=document.querySelectorAll('.cat');
+  cats[cats.length-1].scrollIntoView({behavior:'smooth',block:'center'});
+  cats[cats.length-1].querySelector('[data-catname]')?.focus();
+});
+document.getElementById('btnReset').addEventListener('click',()=>{
+  if(confirm('모든 입력을 기본 예시값으로 되돌립니다. 계속할까요?')){
+    state=freshState(); renderMeta(); renderCats(); renderOpinions(); save(); toast('기본값으로 초기화했습니다');
+  }
+});
+document.getElementById('btnPrint').addEventListener('click',()=>window.print());
+document.getElementById('btnExport').addEventListener('click',async()=>{
+  const md=toMarkdown();
+  try{ await navigator.clipboard.writeText(md); toast('Markdown을 클립보드에 복사했습니다'); }
+  catch(e){ const ta=document.createElement('textarea');ta.value=md;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast('Markdown을 복사했습니다'); }
+});
+
+/* ── Opinions ── */
+document.getElementById('op_add').addEventListener('click',()=>{
+  const txt=op_text.value.trim(); if(!txt){op_text.focus();return;}
+  const now=new Date(); const d=now.getFullYear()+'.'+String(now.getMonth()+1).padStart(2,'0')+'.'+String(now.getDate()).padStart(2,'0');
+  state.opinions.push({id:uid(),author:op_author.value.trim(),text:txt,date:d});
+  op_text.value=''; renderOpinions(); save(); toast('의견을 추가했습니다');
+});
+document.getElementById('op_list').addEventListener('click',e=>{
+  const id=e.target.dataset.opdel; if(!id)return;
+  state.opinions=state.opinions.filter(o=>o.id!==id); renderOpinions(); save();
+});
+
+/* ── Markdown export ── */
+function toMarkdown(){
+  const m=state.meta; let net=0,units=0;
+  state.cats.forEach(c=>{net+=catNet(c);units+=catUnits(c);});
+  const gross=state.eff>0?net/(state.eff/100):0;
+  let o=`# 신축 교사동 소요공간 정의서\n\n`;
+  o+=`| 항목 | 내용 | 항목 | 내용 |\n|---|---|---|---|\n`;
+  o+=`| 학교/시설 | ${m.school||'—'} | 대상 규모 | ${m.scale||'—'} |\n`;
+  o+=`| 작성/담당 | ${m.author||'—'} | 작성일 | ${m.date||'—'} |\n`;
+  o+=`| 버전 | ${m.version||'—'} | 관할 | ${m.authority||'—'} |\n`;
+  o+=`| 대지/위치 | ${m.site||'—'} | 비고 | ${m.note||'—'} |\n\n`;
+  o+=`> 전용면적 합계 **${fmt(net)} ㎡** · 추정 연면적 **${fmt(gross)} ㎡** (유효율 ${state.eff}%) · 총 ${fmt(units)}실\n\n`;
+  state.cats.forEach((c,i)=>{
+    o+=`## ${String(i+1).padStart(2,'0')}. ${c.name}  _(${fmt(catNet(c))} ㎡)_\n\n`;
+    o+=`| 공간명 | 용도·기능 | 수량 | 단위면적㎡ | 수용 | 필요 설비 | 우선순위 | 소계㎡ | 의견·검토 |\n`;
+    o+=`|---|---|--:|--:|--:|---|:--:|--:|---|\n`;
+    c.spaces.forEach(s=>{
+      o+=`| ${s.name||''} | ${s.purpose||''} | ${s.qty||''} | ${s.area||''} | ${s.cap||''} | ${s.equip||''} | ${s.prio||''} | ${fmt(num(s.qty)*num(s.area))} | ${(s.op||'').replace(/\n/g,' ')} |\n`;
+    });
+    o+=`\n`;
+  });
+  if(state.opinions.length){
+    o+=`## 종합 검토 의견\n\n`;
+    state.opinions.forEach(op=>{ o+=`- **${op.author||'익명'}** (${op.date}): ${op.text.replace(/\n/g,' ')}\n`; });
+    o+=`\n`;
+  }
+  o+=`---\n*기본 입력값은 예시이며 실제 설계 기준이 아닙니다. 면적은 건축 설계 단계에서 확정됩니다.*\n`;
+  return o;
+}
+
+/* ── Toast ── */
+let toastT=null;
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),1800);}
+
+/* ── Init ── */
+(async function init(){
+  const saved=await Store.load();
+  state=saved&&saved.cats?saved:freshState();
+  if(!state.opinions) state.opinions=[];
+  if(state.eff==null) state.eff=DEFAULT_EFF;
+  renderMeta(); renderCats(); renderOpinions();
+})();
+</script>
